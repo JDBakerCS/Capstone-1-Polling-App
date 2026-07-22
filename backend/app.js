@@ -3,8 +3,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
 
-
 const dbConnection = require("./db");
+const pollsRouter = require("./routes/polls");
 
 dbConnection
   .authenticate()
@@ -19,7 +19,9 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
-app.use("/polls", pollsRouter)
+app.use("/polls", pollsRouter);
+
+app.use("/api/polls", pollsRouter);
 
 async function startApp() {
   await dbConnection.sync();
