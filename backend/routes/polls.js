@@ -12,7 +12,7 @@ pollsRouter.get("/", async (req, res,next)=>{
         next(err)
     }
 })
-pollsRouter.get("/polls/:id", async (req, res,next)=>{
+pollsRouter.get("/:id", async (req, res,next)=>{
     try{
     const poll= await Poll.findByPk(req.params.id)
     if (!poll) {
@@ -25,7 +25,7 @@ pollsRouter.get("/polls/:id", async (req, res,next)=>{
     }
 })
 
-pollsRouter.post("/polls/create", async (req,res, next)=>{
+pollsRouter.post("/create", async (req,res, next)=>{
     try{
         const {title, description,options}= req.body
         const newPoll= await Poll.create({title,description,options})
@@ -40,11 +40,17 @@ pollsRouter.post("/polls/create", async (req,res, next)=>{
     }
 })
 
+pollsRouter.post(":id/vote", async (req,res)=>{
+    try{
+       
+    }catch(err){
+        next(err)
+    }
+})
 
 
 
-
-pollsRouter.delete("/polls/:id", async (req,res, next)=>{
+pollsRouter.delete("/:id", async (req,res, next)=>{
     try{
     const deletePoll = await Poll.findByPk(req.params.id)
 

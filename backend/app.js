@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
-app.use("/", pollsRouter)
+app.use("/polls", pollsRouter)
 
 async function startApp() {
   await dbConnection.sync();
