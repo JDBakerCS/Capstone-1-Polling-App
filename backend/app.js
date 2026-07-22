@@ -13,7 +13,6 @@ dbConnection
 
 const app = express();
 const { Poll, Option, Vote } = require("./models/index");
-const pollsRouter = require("./routes/polls");
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
