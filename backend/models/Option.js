@@ -4,11 +4,6 @@ const db = require("../db")
 const Option = db.define(
     "Option",
     {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
         text: {
             type: DataTypes.STRING,
             allowNull: false,
