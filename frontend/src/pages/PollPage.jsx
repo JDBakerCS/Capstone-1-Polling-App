@@ -4,10 +4,10 @@ import PollCard from "../components/PollCard";
 import mockPolls from "../data/mockPolls";
 
 function PollPage() {
-  const { id } = useParams();
+const { pollId } = useParams();
   const navigate = useNavigate();
   const [selectedOptionId, setSelectedOptionId] = useState(null);
-  const poll = mockPolls.find((poll) => String(poll.id) === id);
+  const poll = mockPolls.find((poll) => String(poll.id) === pollId);
 
   if (!poll) {
     return (

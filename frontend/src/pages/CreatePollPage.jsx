@@ -1,14 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function createOption(id) {
   return {
     id,
     text: "",
-    voteCount: 0,
+
   };
 }
 
 function CreatePollPage() {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [options, setOptions] = useState([
@@ -16,7 +19,6 @@ function CreatePollPage() {
     createOption(2),
   ]);
   const [error, setError] = useState("");
-  const [submittedPoll, setSubmittedPoll] = useState(null);
 
   function handleOptionChange(optionId, text) {
     setOptions((currentOptions) =>
@@ -35,7 +37,7 @@ function CreatePollPage() {
     });
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const trimmedTitle = title.trim();
@@ -45,19 +47,34 @@ function CreatePollPage() {
 
     if (!trimmedTitle || nonEmptyOptions.length < 2) {
       setError("Enter a title and at least two options.");
-      setSubmittedPoll(null);
       return;
     }
 
-    const poll = {
-      id: Date.now(),
-      title: trimmedTitle,
-      description: description.trim(),
-      options: nonEmptyOptions,
-    };
+    try {
+      setError("");
 
-    setError("");
-    setSubmittedPoll(poll);
+      const response = await fetch("http://localhost:8080/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: trimmedTitle,
+          description: description.trim(),
+          options: nonEmptyOptions.map((option) => ({
+            text: option.text,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create poll");
+      }
+      const createdPoll = await response.json()
+      navigate(`/polls/${createdPoll.id}`)
+    } catch {
+      setError("Could not save poll. Please try again.")
+    }
   }
 
   return (
@@ -116,19 +133,7 @@ function CreatePollPage() {
         <button type="submit">Create Poll</button>
       </form>
 
-      {submittedPoll && (
-        <section className="local-preview" aria-live="polite">
-          <h2>Local Poll Preview</h2>
-          <h3>{submittedPoll.title}</h3>
-          {submittedPoll.description && <p>{submittedPoll.description}</p>}
-          <ul>
-            {submittedPoll.options.map((option) => (
-              <li key={option.id}>{option.text}</li>
-            ))}
-          </ul>
-          <p>This poll has not been saved to a backend.</p>
-        </section>
-      )}
+
     </main>
   );
 }
