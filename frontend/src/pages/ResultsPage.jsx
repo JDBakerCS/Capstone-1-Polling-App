@@ -3,9 +3,9 @@ import PollCard from "../components/PollCard";
 import mockPolls from "../data/mockPolls";
 
 function ResultsPage() {
-  const { id } = useParams();
-  const poll = mockPolls.find((poll) => String(poll.id) === id);
-
+  const { pollId } = useParams();
+  const poll = mockPolls.find((poll) => String(poll.id) === pollId);
+  
   if (!poll) {
     return (
       <main className="page-container">

@@ -10,7 +10,7 @@ function Navbar() {
 
         <div className="site-navbar__links">
           <Link to="/">Home</Link>
-          <Link to="/polls/new">Create Poll</Link>
+          <Link to="/create">Create Poll</Link>
         </div>
       </div>
     </nav>
