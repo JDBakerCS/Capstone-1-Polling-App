@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
 
+
 const dbConnection = require("./db");
 
 dbConnection
@@ -12,11 +13,13 @@ dbConnection
 
 const app = express();
 const { Poll, Option, Vote } = require("./models/index");
+const pollsRouter = require("./routes/polls");
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
+app.use("/", pollsRouter)
 
 async function startApp() {
   await dbConnection.sync();
