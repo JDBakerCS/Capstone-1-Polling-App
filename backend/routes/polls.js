@@ -38,7 +38,7 @@ pollsRouter.post("/create", async (req, res, next) => {
   }
 });
 
-pollsRouter.post(":id/vote", async (req, res) => {
+pollsRouter.post("/:id/vote", async (req, res) => {
   try {
     const { tableName, optionId } = req.body;
     const newVote = await Vote.create({ tableName, optionId });
@@ -48,7 +48,7 @@ pollsRouter.post(":id/vote", async (req, res) => {
     if (!voted) {
       return res.status(404).json();
     } else {
-      res.json;
+      res.status(201).json(voted)
     }
   } catch (err) {
     next(err);
@@ -57,12 +57,12 @@ pollsRouter.post(":id/vote", async (req, res) => {
 
 pollsRouter.delete("/:id", async (req, res, next) => {
   try {
-    const deletePoll = await Poll.findByPk(req.params.id);
+    const deleteOption = await Poll.findByPk(req.params.id);
 
-    if (!deletePoll) {
+    if (!deleteOption) {
       return await res.status(404).json();
     }
-    deletePoll.destroy();
+    deleteOption.destroy();
     res.sendStatus(204);
   } catch (err) {
     next(err);
