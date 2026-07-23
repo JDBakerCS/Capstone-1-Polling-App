@@ -1,18 +1,24 @@
 import PollCard from "../components/PollCard";
 import { useState, useEffect } from "react";
 
-const API_URL = "https://capstone-1-polling-app.onrender.com";
 
 function HomePage() {
 const [Polls, setPolls]= useState([])
 
 
   async function allPolls() {
+
+    const API_URL = "http://localhost:8080";
     let response = await fetch(`${API_URL}/polls`);
     let data = await response.json();
+    console.log(data)
     setPolls(data);
+    
   }
-
+    useEffect(() => {
+      allPolls();
+    }, []);
+    
   return (
     <main className="page-container">
       <h1>All Polls </h1>

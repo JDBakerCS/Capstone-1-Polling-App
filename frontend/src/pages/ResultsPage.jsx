@@ -1,11 +1,23 @@
 import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import PollCard from "../components/PollCard";
-import mockPolls from "../data/mockPolls";
 
 function ResultsPage() {
   const { pollId } = useParams();
-  const poll = mockPolls.find((poll) => String(poll.id) === pollId);
-  
+  const [poll, setPoll] = useState(null);
+
+  async function getPoll() {
+    const API_URL = "https://capstone-1-polling-app.onrender.com";
+    let response = await fetch(`${API_URL}/polls/${pollId}/vote`);
+    let data = await response.json();
+    console.log(data);
+    setPoll(data);
+  }
+
+  useEffect(() => {
+    getPoll();
+  }, []);
+
   if (!poll) {
     return (
       <main className="page-container">

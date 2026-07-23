@@ -1,19 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PollCard from "../components/PollCard";
-import mockPolls from "../data/mockPolls";
 
 function PollPage() {
-const { pollId } = useParams();
+  const { pollId } = useParams();
   const navigate = useNavigate();
+
+  const [poll, setPoll] = useState(null);
   const [selectedOptionId, setSelectedOptionId] = useState(null);
-  const poll = mockPolls.find((poll) => String(poll.id) === pollId);
+
+  async function getPoll() {
+    const API_URL = "http://localhost:8080";
+    let response = await fetch(`${API_URL}/polls/${pollId}`);
+    let data = await response.json();
+
+    setPoll(data);
+  }
+
+  useEffect(() => {
+    getPoll();
+  }, [pollId]);
 
   if (!poll) {
     return (
       <main className="page-container">
-        <h1>Poll Not Found</h1>
-        <p className="empty-state">The requested poll does not exist.</p>
+        <p>Loading...</p>
       </main>
     );
   }
@@ -29,6 +40,7 @@ const { pollId } = useParams();
   return (
     <main className="page-container">
       <h1>Vote</h1>
+
       <PollCard
         poll={poll}
         mode="vote"

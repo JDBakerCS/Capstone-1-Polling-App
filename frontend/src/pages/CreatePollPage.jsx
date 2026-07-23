@@ -52,8 +52,9 @@ function CreatePollPage() {
 
     try {
       setError("");
+    const API_URL = "http://localhost:8080";
 
-      const response = await fetch("http://localhost:8080/polls", {
+      const response = await fetch(`${API_URL}/polls/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
