@@ -43,11 +43,13 @@ res.json(poll);
 pollsRouter.post("/create", async (req, res, next) => {
   try {
     const { title, description, options } = req.body;
-    const newPoll = await Poll.create({ title, description, options });
-    options.map((item) => {
-      let text = item.text;
-      Option.create({ text, pollId: newPoll.id });
-    });
+    const newPoll = await Poll.create({ title, description });
+  if (options && Array.isArray(options)) {
+    const optionPromises = options.map((item) =>
+    Option.create({ text: item.text, pollId: newPoll.id })
+  );
+    await Promise.all(optionPromises);
+}
 
     return res.status(201).json(newPoll);
   } catch (err) {
@@ -55,7 +57,7 @@ pollsRouter.post("/create", async (req, res, next) => {
   }
 });
 
-pollsRouter.post("/:id/vote", async (req, res) => {
+pollsRouter.post("/:id/vote", async (req, res, next) => {
   try {
     const { tableName, optionId } = req.body;
     const newVote = await Vote.create({ tableName, optionId });
@@ -85,14 +87,14 @@ res.json(poll);
   }
 });
 
-pollsRouter.delete("/:id/deleted", async (req, res, next) => {
+pollsRouter.delete("/:id", async (req, res, next) => {
   try {
     const deleteOption = await Poll.findByPk(req.params.id);
 
     if (!deleteOption) {
       return await res.status(404).json();
     }
-    deleteOption.destroy();
+     await deleteOption.destroy();
     res.sendStatus(204);
   } catch (err) {
     next(err);

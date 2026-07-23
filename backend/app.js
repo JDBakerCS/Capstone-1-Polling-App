@@ -20,7 +20,10 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 app.use("/polls", pollsRouter);
-app.use(errorHandler)
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: err.message || "Server Error" });
+});
 
 async function errorHandler(err, req, res, next){
   console.error(err);
