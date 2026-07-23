@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { useState } from "react";
 import NavBar from "./components/NavBar.jsx";
 import CreatePollPage from "./pages/CreatePollPage.jsx";
 import HomePage from "./pages/HomePage.jsx";

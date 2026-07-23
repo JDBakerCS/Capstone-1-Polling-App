@@ -1,4 +1,3 @@
-// This function calculates each bar's width compared with the highest vote count.
 function getBarWidth(voteCount, highestVoteCount) {
   if (highestVoteCount === 0) {
     return 0;
@@ -9,9 +8,9 @@ function getBarWidth(voteCount, highestVoteCount) {
 
 function ResultsList({ options = [] }) {
   const sortedOptions = [...options].sort(
-    (a, b) => (b.voteCount ?? 0) - (a.voteCount ?? 0),
+    (a, b) => (b.votes.length ?? 0) - (a.votes.length ?? 0),
   );
-  const highestVoteCount = sortedOptions[0]?.voteCount ?? 0;
+  const highestVoteCount = sortedOptions[0]?.votes.length ?? 0;
 
   return (
     <section className="results-list">
@@ -21,7 +20,7 @@ function ResultsList({ options = [] }) {
         <p className="empty-state">No results are available.</p>
       ) : (
         sortedOptions.map((option) => {
-          const voteCount = option.voteCount ?? 0;
+          const voteCount = option.votes.length ?? 0;
           const barWidth = getBarWidth(voteCount, highestVoteCount);
 
           return (

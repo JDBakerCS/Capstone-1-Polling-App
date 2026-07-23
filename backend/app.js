@@ -6,6 +6,7 @@ require("dotenv").config();
 const dbConnection = require("./db");
 const pollsRouter = require("./routes/polls");
 
+
 dbConnection
   .authenticate()
   .then(() => console.log("DB connected"))
@@ -19,8 +20,15 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 app.use("/polls", pollsRouter);
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: err.message || "Server Error" });
+});
 
-app.use("/api/polls", pollsRouter);
+async function errorHandler(err, req, res, next){
+  console.error(err);
+  res.sendStatus(500);
+}
 
 async function startApp() {
   await dbConnection.sync();

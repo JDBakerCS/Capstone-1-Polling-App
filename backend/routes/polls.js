@@ -13,11 +13,28 @@ pollsRouter.get("/", async (req, res, next) => {
 });
 pollsRouter.get("/:id", async (req, res, next) => {
   try {
-    const poll = await Poll.findByPk(req.params.id);
+    const poll = await Poll.findByPk(req.params.id, {
+      include: [
+        {
+          model: Option,
+          as: "options",
+          include:[
+      {
+        model: Vote,
+        as: "votes",
+      },
+    ],
+        },
+      ],
+  });
+   console.log(poll);
     if (!poll) {
-      return res.sendStatus(404);
-    }
-    res.json(poll);
+  return res.sendStatus(404);
+}
+
+console.log(JSON.stringify(poll, null, 2));
+
+res.json(poll);
   } catch (err) {
     next(err);
   }
@@ -26,11 +43,13 @@ pollsRouter.get("/:id", async (req, res, next) => {
 pollsRouter.post("/create", async (req, res, next) => {
   try {
     const { title, description, options } = req.body;
-    const newPoll = await Poll.create({ title, description, options });
-    options.map((item) => {
-      let text = item.text;
-      Option.create({ text, pollId: newPoll.id });
-    });
+    const newPoll = await Poll.create({ title, description });
+  if (options && Array.isArray(options)) {
+    const optionPromises = options.map((item) =>
+    Option.create({ text: item.text, pollId: newPoll.id })
+  );
+    await Promise.all(optionPromises);
+}
 
     return res.status(201).json(newPoll);
   } catch (err) {
@@ -38,7 +57,7 @@ pollsRouter.post("/create", async (req, res, next) => {
   }
 });
 
-pollsRouter.post("/:id/vote", async (req, res) => {
+pollsRouter.post("/:id/vote", async (req, res, next) => {
   try {
     const { tableName, optionId } = req.body;
     const newVote = await Vote.create({ tableName, optionId });
@@ -54,6 +73,19 @@ pollsRouter.post("/:id/vote", async (req, res) => {
     next(err);
   }
 });
+pollsRouter.get("/:id/results",async (req,res, next)=>{
+  try {
+    const votes= await Vote.findByPk(req.params.id)
+   console.log(poll);
+    if (!votes) {
+  return res.sendStatus(404);
+}
+
+res.json(poll);
+  } catch (err) {
+    next(err);
+  }
+});
 
 pollsRouter.delete("/:id", async (req, res, next) => {
   try {
@@ -62,7 +94,7 @@ pollsRouter.delete("/:id", async (req, res, next) => {
     if (!deleteOption) {
       return await res.status(404).json();
     }
-    deleteOption.destroy();
+     await deleteOption.destroy();
     res.sendStatus(204);
   } catch (err) {
     next(err);
