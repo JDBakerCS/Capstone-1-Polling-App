@@ -13,11 +13,22 @@ pollsRouter.get("/", async (req, res, next) => {
 });
 pollsRouter.get("/:id", async (req, res, next) => {
   try {
-    const poll = await Poll.findByPk(req.params.id);
+    const poll = await Poll.findByPk(req.params.id, {
+      include: [
+        {
+          model: Option,
+          as: "options",
+        },
+      ],
+  });
+   console.log(poll);
     if (!poll) {
-      return res.sendStatus(404);
-    }
-    res.json(poll);
+  return res.sendStatus(404);
+}
+
+console.log(JSON.stringify(poll, null, 2));
+
+res.json(poll);
   } catch (err) {
     next(err);
   }
@@ -55,7 +66,7 @@ pollsRouter.post("/:id/vote", async (req, res) => {
   }
 });
 
-pollsRouter.delete("/:id", async (req, res, next) => {
+pollsRouter.delete("/:id/deleted", async (req, res, next) => {
   try {
     const deleteOption = await Poll.findByPk(req.params.id);
 
