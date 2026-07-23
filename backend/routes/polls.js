@@ -18,6 +18,12 @@ pollsRouter.get("/:id", async (req, res, next) => {
         {
           model: Option,
           as: "options",
+          include:[
+      {
+        model: Vote,
+        as: "votes",
+      },
+    ],
         },
       ],
   });
@@ -61,6 +67,19 @@ pollsRouter.post("/:id/vote", async (req, res) => {
     } else {
       res.status(201).json(voted)
     }
+  } catch (err) {
+    next(err);
+  }
+});
+pollsRouter.get("/:id/results",async (req,res, next)=>{
+  try {
+    const votes= await Vote.findByPk(req.params.id)
+   console.log(poll);
+    if (!votes) {
+  return res.sendStatus(404);
+}
+
+res.json(poll);
   } catch (err) {
     next(err);
   }
