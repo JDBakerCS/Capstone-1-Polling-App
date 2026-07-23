@@ -8,7 +8,7 @@ const [Polls, setPolls]= useState([])
 
   async function allPolls() {
 
-    const API_URL = "http://localhost:8080";
+    const API_URL = "https://capstone-1-polling-app.onrender.com";
     let response = await fetch(`${API_URL}/polls`);
     let data = await response.json();
     console.log(data)

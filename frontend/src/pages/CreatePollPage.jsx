@@ -52,7 +52,7 @@ function CreatePollPage() {
 
     try {
       setError("");
-    const API_URL = "http://localhost:8080";
+    const API_URL = "https://capstone-1-polling-app.onrender.com";
 
       const response = await fetch(`${API_URL}/polls/create`, {
         method: "POST",

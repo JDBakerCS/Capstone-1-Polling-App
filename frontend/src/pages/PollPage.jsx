@@ -10,7 +10,7 @@ function PollPage() {
   const [selectedOptionId, setSelectedOptionId] = useState(null);
 
   async function getPoll() {
-    const API_URL = "http://localhost:8080";
+    const API_URL = "https://capstone-1-polling-app.onrender.com";
     let response = await fetch(`${API_URL}/polls/${pollId}`);
     let data = await response.json();
 
