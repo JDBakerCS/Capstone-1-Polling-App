@@ -8,6 +8,7 @@ function PollPage() {
 
   const [poll, setPoll] = useState(null);
   const [selectedOptionId, setSelectedOptionId] = useState(null);
+  import PollCard from "../components/PollCard";
 
   async function getPoll() {
     const API_URL = "https://capstone-1-polling-app.onrender.com";
