@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import ResultsList from "./ResultsList";
 
 function PollCard({
@@ -12,6 +13,10 @@ function PollCard({
   if (!poll) {
     return <p className="empty-state">Poll data is unavailable.</p>;
   }
+ useEffect(() => {
+     console.log(poll)
+  }, []);
+
 
   const options = Array.isArray(poll.options) ? poll.options : [];
 
@@ -82,9 +87,9 @@ function PollCard({
       <footer className="poll-card__actions">
         {isSummaryMode && (
           <>
-            <Link to={`/polls/${poll.id}`}>Vote</Link>
+            <Link className= "pollCardLink" to={`/polls/${poll.id}`}>Vote</Link>
 
-            <Link to={`/polls/${poll.id}/results`}>
+            <Link className="pollCardLink" to={`/polls/${poll.id}/results`}>
               View Results
             </Link>
           </>
